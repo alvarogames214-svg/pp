@@ -1858,6 +1858,30 @@ window.addEventListener('appinstalled', () => {
 window.addEventListener('online',  () => document.documentElement.classList.remove('is-offline'));
 window.addEventListener('offline', () => document.documentElement.classList.add('is-offline'));
 if (!navigator.onLine) document.documentElement.classList.add('is-offline');
+
+// ── SECURITY HELPERS ──
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Solo permite URLs http/https (bloquea javascript:, data:, etc.)
+function isValidHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch (_) {
+    return false;
+  }
+}
+
+
+
 </script>
 
 </body>
