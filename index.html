@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- ── SEGURIDAD ── -->
+
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+
 <title>Conexión Local</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="estilo.css">
@@ -215,10 +221,14 @@ onAuthStateChanged(auth, async (user) => {
 <!-- SEARCH -->
 <div class="search-wrap">
   <i class="fas fa-search search-icon"></i>
-  <input class="search-input" id="searchInput" placeholder="¿Qué buscas hoy en Puerto Tejada?">
+  <input class="search-input" id="searchInput" placeholder="¿Qué buscas hoy en Puerto Tejada?" maxlength="100" autocomplete="off" spellcheck="false">
   <button class="voice-btn" id="voiceBtn" title="Buscar por voz">
     <i class="fas fa-microphone" id="voiceIcon"></i>
   </button>
+  <input class="search-input" id="searchInput" 
+  placeholder="¿Qué buscas hoy en Puerto Tejada?" 
+  maxlength="100" 
+  autocomplete="off">
 </div>
 
 <!-- CATEGORIES -->
@@ -357,7 +367,7 @@ onAuthStateChanged(auth, async (user) => {
 
       <div class="modal-actions">
         <a class="btn btn-whatsapp" id="modalWA" href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-        <a class="btn btn-location" id="modalMapBtn" href="#" target="_blank"><i class="fas fa-map-marker-alt"></i> Mapa</a>
+        <a class="btn btn-location" id="modalMapBtn" href="#" target="_blank" rel="noopener noreferrer"><i class="fas fa-map-marker-alt"></i> Mapa</a>
       </div>
 
       <div class="stars-section">
@@ -373,7 +383,7 @@ onAuthStateChanged(auth, async (user) => {
       <div id="modalGallery" style="display:none;margin-bottom:18px;"></div>
 
       <h4 style="font-size:14px;font-weight:600;margin-bottom:10px;">📍 Ubicación</h4>
-      <a id="modalMapPlaceholder" href="#" target="_blank" style="text-decoration:none;display:block;">
+      <a id="modalMapPlaceholder" href="#" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:block;">
         <div class="map-placeholder" id="modalMapBox">
           <i class="fas fa-map-marked-alt"></i>
           <span id="modalMapLabel">Ver en Google Maps</span>
@@ -1305,6 +1315,7 @@ function openModal(id) {
   // WhatsApp — prefer item.whatsapp, fallback to PHONES map
   const waNum = item.whatsapp || PHONES[item.id] || '3000000000';
   document.getElementById('modalWA').href = `https://wa.me/57${waNum}`;
+  document.getElementById('modalWA').rel  = 'noopener noreferrer';
 
   // Mapa button — build Google Maps URL from address
   const mapBtn = document.getElementById('modalMapBtn');
@@ -1338,13 +1349,13 @@ function openModal(id) {
   if (item.whatsapp)  infoHTML += `<div class="info-row"><i class="fab fa-whatsapp"></i><span>${item.whatsapp}</span></div>`;
   if (item.email)     infoHTML += `<div class="info-row"><i class="fas fa-envelope"></i><span>${item.email}</span></div>`;
   if (item.hours)     infoHTML += `<div class="info-row"><i class="fas fa-clock"></i><span>${item.hours}</span></div>`;
-  if (item.catalog)   infoHTML += `<div class="info-row"><i class="fas fa-book-open"></i><a href="${item.catalog}" target="_blank" style="color:var(--primary);font-weight:600;text-decoration:none;">Ver catálogo</a></div>`;
+  if (item.catalog)   infoHTML += `<div class="info-row"><i class="fas fa-book-open"></i><a href="${item.catalog}" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:600;text-decoration:none;">Ver catálogo</a></div>`;
 
   if (item.instagram)
   infoHTML += `
     <div class="info-row">
       <i class="fab fa-instagram"></i>
-      <a href="${item.instagram}" target="_blank"
+      <a href="${item.instagram}" target="_blank" rel="noopener noreferrer"
          style="color:var(--primary);font-weight:600;text-decoration:none;">
          Instagram
       </a>
@@ -1354,7 +1365,7 @@ function openModal(id) {
   infoHTML += `
     <div class="info-row">
       <i class="fab fa-facebook"></i>
-      <a href="${item.facebook}" target="_blank"
+      <a href="${item.facebook}" target="_blank" rel="noopener noreferrer"
          style="color:var(--primary);font-weight:600;text-decoration:none;">
          Facebook
       </a>
