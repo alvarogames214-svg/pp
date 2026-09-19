@@ -1,0 +1,70 @@
+    <div class="visit-counter" id="visitCounter" aria-label="Contador de visitas" title="Visitas totales">
+      <i class="fas fa-eye" aria-hidden="true"></i>
+      <span id="visitCount">...</span>
+    </div>
+
+    // ── VISIT COUNTER — slot machine ──
+(function () {
+  const el    = document.getElementById('visitCounter');
+  const numEl = document.getElementById('visitCount');
+  const NAMESPACE = 'conexion-local-pt';
+  const KEY       = 'page-visits';
+  const LS_KEY    = 'cl_local_visits';
+
+  function slotAnimate(n) {
+    const str = n >= 1000000 ? (n/1000000).toFixed(1)+'M'
+              : n >= 1000    ? (n/1000).toFixed(1)+'K'
+              : n.toString();
+    numEl.innerHTML = str.split('').map((ch, i) =>
+      `<span class="slot-digit" style="animation-delay:${i * 60}ms">${ch}</span>`
+    ).join('');
+    el.classList.remove('loading');
+  }
+
+  function localFallback() {
+    const local = parseInt(localStorage.getItem(LS_KEY) || '0') + 1;
+    localStorage.setItem(LS_KEY, local);
+    slotAnimate(local);
+  }
+
+  el.classList.add('loading');
+  fetch(`https://api.countapi.xyz/hit/${NAMESPACE}/${KEY}`)
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(data => {
+      if (data && typeof data.value === 'number') {
+        slotAnimate(data.value);
+        localStorage.setItem(LS_KEY, data.value);
+      } else { localFallback(); }
+    })
+    .catch(localFallback);
+})();
+
+
+
+/* ── VISIT COUNTER — slot machine ── */
+.visit-counter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--primary-light);
+  border: 1px solid rgba(232,82,10,0.15);
+  border-radius: 20px;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  cursor: default;
+  transition: opacity 0.3s;
+  overflow: hidden;
+}
+.visit-counter i { font-size: 11px; }
+.visit-counter.loading { opacity: 0.5; }
+
+.slot-digit {
+  display: inline-block;
+  animation: slotSpin 0.4s cubic-bezier(0.22,0.61,0.36,1) both;
+}
+@keyframes slotSpin {
+  0%   { transform: translateY(-14px); opacity: 0; }
+  100% { transform: translateY(0);     opacity: 1; }
+}
