@@ -19,6 +19,15 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+  #viewLoggedIn { display: none !important; }
+  #viewLoggedIn.active { display: block !important; }
+  #viewLoggedOut { display: none !important; }
+  #viewLoggedOut.active { display: block !important; }
+  #profilePhoto { display: none; }
+</style>
+
 </head>
 
 <script type="module">
@@ -225,10 +234,6 @@ onAuthStateChanged(auth, async (user) => {
   <button class="voice-btn" id="voiceBtn" title="Buscar por voz">
     <i class="fas fa-microphone" id="voiceIcon"></i>
   </button>
-  <input class="search-input" id="searchInput" 
-  placeholder="¿Qué buscas hoy en Puerto Tejada?" 
-  maxlength="100" 
-  autocomplete="off">
 </div>
 
 <!-- CATEGORIES -->
@@ -439,7 +444,7 @@ onAuthStateChanged(auth, async (user) => {
     <!-- Vista con sesión -->
     <div class="profile-view" id="viewLoggedIn">
       <div class="profile-user-info">
-        <img class="profile-user-photo" id="profilePhoto" src="" alt="Foto de perfil">
+        <img class="profile-user-photo" id="profilePhoto" src="" alt="Foto de perfil" style="display:none;">
         <div>
           <div class="profile-user-name" id="profileName">—</div>
           <div class="profile-user-email" id="profileEmail">—</div>
@@ -1621,26 +1626,37 @@ window._fbUpdateProfileUI = function(user) {
   const avatarWrap = document.getElementById('profileAvatarWrap');
 
   if (user) {
-    out.classList.remove('active');
-    inn.classList.add('active');
-    greeting.textContent  = `¡Hola, ${user.displayName.split(' ')[0]}!`;
-    subtitle.textContent  = 'Tu cuenta está sincronizada';
-    document.getElementById('profileName').textContent  = user.displayName;
-    document.getElementById('profileEmail').textContent = user.email;
-    const photo = document.getElementById('profilePhoto');
-    if (user.photoURL) {
-      photo.src = user.photoURL;
-      photo.style.display = 'block';
-      avatarWrap.innerHTML = `<img src="${user.photoURL}" style="width:68px;height:68px;border-radius:50%;border:3px solid rgba(255,255,255,0.6);object-fit:cover;">`;
-    }
+  out.classList.remove('active');
+  inn.classList.add('active');
+  greeting.textContent = `¡Hola, ${user.displayName.split(' ')[0]}!`;
+  subtitle.textContent = 'Tu cuenta está sincronizada';
+  document.getElementById('profileName').textContent  = user.displayName;
+  document.getElementById('profileEmail').textContent = user.email;
+
+  if (user.photoURL) {
+    // Tiene foto real de Google
+    avatarWrap.innerHTML = `<img src="${user.photoURL}" 
+      style="width:68px;height:68px;border-radius:50%;
+             border:3px solid rgba(255,255,255,0.6);object-fit:cover;">`;
+    document.getElementById('profilePhoto').src          = user.photoURL;
+    document.getElementById('profilePhoto').style.display = 'block';
   } else {
-    inn.classList.remove('active');
-    out.classList.add('active');
-    greeting.textContent = '¡Bienvenido!';
-    subtitle.textContent = 'Inicia sesión para sincronizar tus favoritos';
-    avatarWrap.innerHTML = '<i class="fas fa-user"></i>';
-    document.getElementById('googleBtn').classList.remove('loading');
+    // Sin foto — mostrar inicial con estilo consistente
+    const inicial = user.displayName ? user.displayName[0].toUpperCase() : '?';
+    avatarWrap.innerHTML = `<div style="
+      width:68px;height:68px;border-radius:50%;
+      background:rgba(255,255,255,0.25);
+      border:3px solid rgba(255,255,255,0.6);
+      display:flex;align-items:center;justify-content:center;
+      font-size:28px;font-weight:800;color:#fff;
+      font-family:'Syne',sans-serif;">
+      ${inicial}
+    </div>`;
+    // En el info-row usar también la inicial
+    const photoEl = document.getElementById('profilePhoto');
+    photoEl.style.display = 'none'; // ocultamos la img rota
   }
+}
 };
 
 

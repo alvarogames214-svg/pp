@@ -1537,90 +1537,173 @@ a:hover .map-placeholder {
 .lightbox-close:hover { background: rgba(255,255,255,0.28); }
 
 /* ── PERFIL FIREBASE ── */
-.profile-view { display: none; padding: 20px 20px 28px; }
-.profile-view.active { display: block; }
+.profile-view {
+  display: none !important;
+  padding: 20px 20px 28px;
+}
+.profile-view.active {
+  display: block !important;
+}
 
 .google-btn {
-  width: 100%; padding: 13px;
+  width: 100%;
+  padding: 12px 16px;
   border-radius: var(--radius-sm);
   border: 1.5px solid var(--border);
   background: var(--surface);
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px; font-weight: 600;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
+  display: flex;
+  flex-direction: row;        /* ← fuerza horizontal */
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   color: var(--text);
   transition: box-shadow 0.2s, transform 0.15s;
   box-shadow: var(--shadow);
+  white-space: nowrap;        /* ← evita que el texto baje */
 }
 
 .google-btn .g-icon {
-  width: 20px;   /* era más grande */
+  width: 20px;
   height: 20px;
+  flex-shrink: 0;             /* ← no se estira */
+  display: block;
 }
 
-.google-btn:hover  { box-shadow: var(--shadow-hover); }
-.google-btn:active { transform: scale(0.97); }
-.google-btn.loading { opacity: 0.6; pointer-events: none; }
+.google-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
 
 .auth-desc {
-  font-size: 13px; color: var(--text-muted);
-  text-align: center; margin-bottom: 20px; line-height: 1.5;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.5;
 }
+
 
 .profile-user-info {
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 16px; padding: 14px;
-  background: var(--bg); border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;        /* ← centra verticalmente */
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
+  overflow: hidden;           /* ← evita que desborde */
 }
+
+
 .profile-user-photo {
-  width: 52px; height: 52px; border-radius: 50%;
-  object-fit: cover; border: 2px solid var(--primary); flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+  flex-shrink: 0;
+  display: none; /* oculto hasta que Firebase asigne src */
 }
-.profile-user-name  { font-size: 15px; font-weight: 700; color: var(--text); }
-.profile-user-email { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+
+.profile-user-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;        /* ← nombre en una línea */
+  overflow: hidden;
+  text-overflow: ellipsis;    /* ← ... si es muy largo */
+  max-width: 180px;
+}
+
+.profile-user-email {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
 
 .profile-stat-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 10px; margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 .profile-stat {
-  background: var(--bg); border-radius: var(--radius-sm);
-  padding: 14px 12px; text-align: center;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  text-align: center;
   border: 1px solid var(--border);
 }
 .profile-stat .stat-val {
-  font-size: 22px; font-weight: 800;
-  color: var(--primary); font-family: 'Syne', sans-serif; display: block;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary);
+  font-family: 'Syne', sans-serif;
+  display: block;
 }
 .profile-stat .stat-lbl {
-  font-size: 11px; color: var(--text-muted); margin-top: 2px; display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  display: block;
 }
 .profile-info-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 11px 14px; background: var(--bg);
-  border-radius: var(--radius-sm); border: 1px solid var(--border);
-  margin-bottom: 8px; font-size: 13px; color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text);
 }
 .profile-info-row i {
-  width: 18px; text-align: center;
-  color: var(--primary); font-size: 14px; flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+  color: var(--primary);
+  font-size: 14px;
+  flex-shrink: 0;
 }
 .signout-btn {
-  width: 100%; margin-top: 6px; padding: 11px;
-  border-radius: var(--radius-sm); border: 1.5px solid var(--border);
-  background: transparent; color: var(--text-muted);
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: border-color 0.2s, color 0.2s;
+  width: 100%;
+  margin-top: 6px;
+  padding: 11px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
 }
 .signout-btn:hover { border-color: #D93025; color: #D93025; }
 
 .cloud-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: var(--accent-light); color: var(--accent);
-  font-size: 10px; font-weight: 700;
-  padding: 3px 8px; border-radius: 20px; margin-left: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  margin-left: 6px;
 }
 
 /* ── TOAST ── */
